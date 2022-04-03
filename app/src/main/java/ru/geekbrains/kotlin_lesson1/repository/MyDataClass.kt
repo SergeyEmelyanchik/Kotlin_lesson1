@@ -1,4 +1,4 @@
-package ru.geekbrains.kotlin_lesson1.repo
+package ru.geekbrains.kotlin_lesson1.repository
 
 import android.util.Log
 

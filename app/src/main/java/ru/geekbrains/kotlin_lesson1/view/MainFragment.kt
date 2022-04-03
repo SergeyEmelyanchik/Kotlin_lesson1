@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentMainBinding
 import ru.geekbrains.kotlin_lesson1.viewmodel.MainViewModel
 

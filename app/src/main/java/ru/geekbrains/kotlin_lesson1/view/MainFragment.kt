@@ -17,18 +17,22 @@ import ru.geekbrains.kotlin_lesson1.viewmodel.MainViewModel
 class MainFragment : Fragment() {
 
 
-    lateinit var binding: FragmentMainBinding// утечка памяти
+    private var _binding: FragmentMainBinding? = null
+    private val binding: FragmentMainBinding
+    get() {
+        return _binding!!
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        //binding=null - оставили до следующей лекции
+        _binding=null
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -50,11 +54,12 @@ class MainFragment : Fragment() {
         viewModel.getWeather()
     }
 
-    private fun renderData(data:AppState){
-        when (data){
+    private fun renderData(data: AppState) {
+        when (data) {
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainView, "Не получилось ${data.error}", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.mainView, "Не получилось ${data.error}", Snackbar.LENGTH_LONG)
+                    .show()
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
@@ -64,7 +69,8 @@ class MainFragment : Fragment() {
                 binding.cityName.text = data.weatherData.city.name.toString()
                 binding.temperatureValue.text = data.weatherData.temperature.toString()
                 binding.feelsLikeValue.text = data.weatherData.feelsLike.toString()
-                binding.cityCoordinates.text = "${data.weatherData.city.lat} ${data.weatherData.city.lon}"
+                binding.cityCoordinates.text =
+                    "${data.weatherData.city.lat} ${data.weatherData.city.lon}"
                 Snackbar.make(binding.mainView, "Получилось", Snackbar.LENGTH_LONG).show()
                 //Toast.makeText(requireContext(),"РАБОТАЕТ",Toast.LENGTH_SHORT).show()
             }

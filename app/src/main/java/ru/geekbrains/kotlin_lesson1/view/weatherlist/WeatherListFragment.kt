@@ -42,7 +42,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         return binding.root
     }
 
-    var isRussian = true
+    var isBelarus = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,21 +52,18 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         binding.recyclerView.adapter = adapter // TODO HW вынесты в initRecycler()
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         //val observer = Observer<Any>{ renderData(it) }
-        val observer = object : Observer<AppState> {
-            override fun onChanged(data: AppState) {
-                renderData(data)
-            }
-        }
+        val observer =
+            Observer<AppState> { data -> renderData(data) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
         binding.floatingActionButton.setOnClickListener {
-            isRussian = !isRussian
-            if (isRussian) {
+            isBelarus = !isBelarus
+            if (isBelarus) {
                 viewModel.getWeatherRussia()
                 binding.floatingActionButton.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_russia
+                        R.drawable.ic_belarus
                     )
                 )
             } else {

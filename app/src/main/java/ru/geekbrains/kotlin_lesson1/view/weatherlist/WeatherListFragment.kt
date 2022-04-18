@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentWeatherListBinding
@@ -26,7 +27,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             return _binding!!
         }
 
-    val adapter = WeatherListAdapter(this)
+    private val adapter = WeatherListAdapter(this)
 
     override fun onDestroy() {
         super.onDestroy()
@@ -36,9 +37,8 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
-        //return inflater.inflate(R.layout.fragment_main, container, false)
         return binding.root
     }
 
@@ -46,14 +46,13 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //binding.btnOne.setOnClickListener {  }
-        // view.findViewById<TextView>(R.id.btnOne).setOnClickListener {  }
-        // view.findViewById<Button>(R.id.btnOne).setOnClickListener {  }
-        binding.recyclerView.adapter = adapter // TODO HW вынесты в initRecycler()
+        binding.recyclerView.apply {
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        //val observer = Observer<Any>{ renderData(it) }
-        val observer =
-            Observer<AppState> { data -> renderData(data) }
+        val observer = {data: AppState -> renderData(data)}
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
         binding.floatingActionButton.setOnClickListener {
@@ -94,12 +93,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
                 adapter.setData(data.weatherList)
 
 
-                /* binding.cityName.text = data.weatherData.city.name.toString()
-                 binding.temperatureValue.text = data.weatherData.temperature.toString()
-                 binding.feelsLikeValue.text = data.weatherData.feelsLike.toString()
-                 binding.cityCoordinates.text = "${data.weatherData.city.lat} ${data.weatherData.city.lon}"
-                 Snackbar.make(binding.mainView, "Получилось", Snackbar.LENGTH_LONG).show()*/
-                //Toast.makeText(requireContext(),"РАБОТАЕТ",Toast.LENGTH_SHORT).show()
+
             }
         }
     }
@@ -110,11 +104,12 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     }
 
     override fun onItemClick(weather: Weather) {
-        val bundle = Bundle()
-        bundle.putParcelable(KEY_BUNDLE_WEATHER, weather)
+
         requireActivity().supportFragmentManager.beginTransaction().add(
             R.id.container,
-            DetailsFragment.newInstance(bundle)
+            DetailsFragment.newInstance(Bundle().apply {
+                putParcelable(KEY_BUNDLE_WEATHER, weather)
+            })
         ).addToBackStack("").commit()
     }
 }

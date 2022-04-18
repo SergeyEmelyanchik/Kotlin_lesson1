@@ -3,6 +3,7 @@ package ru.geekbrains.kotlin_lesson1.view.weatherlist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentWeatherListRecyclerItemBinding
 import ru.geekbrains.kotlin_lesson1.repository.Weather
@@ -10,8 +11,7 @@ import ru.geekbrains.kotlin_lesson1.repository.Weather
 class WeatherListAdapter(
     private val onItemListClickListener: OnItemListClickListener,
     private var data: List<Weather> = listOf()
-) :
-    RecyclerView.Adapter<WeatherListAdapter.CityHolder>() {
+) : RecyclerView.Adapter<WeatherListAdapter.CityHolder>() {
 
     fun setData(dataNew: List<Weather>) {
         this.data = dataNew
@@ -24,6 +24,7 @@ class WeatherListAdapter(
             parent,
             false
         )
+
         return CityHolder(binding.root)
     }
 
@@ -38,10 +39,11 @@ class WeatherListAdapter(
             FragmentWeatherListRecyclerItemBinding.bind(itemView).apply {
                 tvCityName.text = weather.city.name
                 root.setOnClickListener {
-                    onItemListClickListener.onItemClick(weather)
+                onItemListClickListener.onItemClick(weather)
                 }
             }
+
+
         }
     }
-
 }

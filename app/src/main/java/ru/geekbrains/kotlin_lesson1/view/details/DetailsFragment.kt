@@ -46,20 +46,21 @@ class DetailsFragment : Fragment() {
     private fun renderData(weather: Weather) {
         with(binding){
             loadingLayout.visibility = View.GONE
-            cityName.text = weather.city.name.toString()
-            temperatureValue.text = weather.temperature.toString()
-            feelsLikeValue.text = weather.feelsLike.toString()
-            cityCoordinates.text = "${weather.city.lat} ${weather.city.lon}"
+            with(weather) {
+                cityName.text = city.name
+                temperatureValue.text = temperature.toString()
+                feelsLikeValue.text = feelsLike.toString()
+                cityCoordinates.text = "${city.lat} ${city.lon}"
+            }
         }
-
-        Snackbar.make(binding.mainView, "Все работает!", Snackbar.LENGTH_LONG).show()
-        mainView.showSnackBar()
-        //Toast.makeText(requireContext(),"РАБОТАЕТ",Toast.LENGTH_SHORT).show()
+       // Snackbar.make(binding.mainView, "Все работает!", Snackbar.LENGTH_LONG).show()
+        mainView.showSnackBar("Все работает!")
     }
 
-    fun View.showSnackBar(){
-
+    private fun View.showSnackBar(it: String) {
+    Snackbar.make(this, it, Snackbar.LENGTH_SHORT).show()
     }
+
 
     companion object {
         @JvmStatic

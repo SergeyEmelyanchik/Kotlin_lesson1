@@ -44,7 +44,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
 
     var isBelarus = true
 
-    private val viewModel:MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
@@ -56,7 +56,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             it.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        val observer = {data: AppState -> renderData(data)}
+        val observer = { data: AppState -> renderData(data) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
         setupFab()
         viewModel.getWeatherRussia()
@@ -99,7 +99,6 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             is AppState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
                 adapter.setData(data.weatherList)
-
 
 
             }

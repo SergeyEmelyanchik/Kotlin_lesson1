@@ -15,7 +15,7 @@ class WeatherListAdapter(
 
     fun setData(dataNew: List<Weather>) {
         this.data = dataNew
-        notifyDataSetChanged() //DiffUtil если интересно
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
@@ -39,7 +39,7 @@ class WeatherListAdapter(
             FragmentWeatherListRecyclerItemBinding.bind(itemView).apply {
                 tvCityName.text = weather.city.name
                 root.setOnClickListener {
-                onItemListClickListener.onItemClick(weather)
+                    onItemListClickListener.onItemClick(weather)
                 }
             }
 

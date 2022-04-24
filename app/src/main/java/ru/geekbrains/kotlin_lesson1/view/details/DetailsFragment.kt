@@ -44,7 +44,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun renderData(weather: Weather) {
-        with(binding){
+        with(binding) {
             loadingLayout.visibility = View.GONE
             with(weather) {
                 cityName.text = city.name
@@ -53,12 +53,11 @@ class DetailsFragment : Fragment() {
                 cityCoordinates.text = "${city.lat} ${city.lon}"
             }
         }
-       // Snackbar.make(binding.mainView, "Все работает!", Snackbar.LENGTH_LONG).show()
         mainView.showSnackBar("Все работает!")
     }
 
     private fun View.showSnackBar(it: String) {
-    Snackbar.make(this, it, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(this, it, Snackbar.LENGTH_SHORT).show()
     }
 
 

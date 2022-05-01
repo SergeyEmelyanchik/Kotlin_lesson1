@@ -8,11 +8,14 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_details.*
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentDetailsBinding
+import ru.geekbrains.kotlin_lesson1.repository.OnServerResponse
 import ru.geekbrains.kotlin_lesson1.repository.Weather
+import ru.geekbrains.kotlin_lesson1.repository.WeatherDTO
+import ru.geekbrains.kotlin_lesson1.repository.WeatherLoader
 import ru.geekbrains.kotlin_lesson1.utlis.KEY_BUNDLE_WEATHER
 
 
-class DetailsFragment : Fragment() {
+class DetailsFragment : Fragment(), OnServerResponse {
 
 
     private var _binding: FragmentDetailsBinding? = null
@@ -34,22 +37,25 @@ class DetailsFragment : Fragment() {
         return binding.root
     }
 
-
+    lateinit var currentCityName: String
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.getParcelable<Weather>(KEY_BUNDLE_WEATHER)?.let {
-            renderData(it)
+            currentCityName = it.city.name
+            //Thread{
+            WeatherLoader(this@DetailsFragment).loadWeather(it.city.lat, it.city.lon)
+            //}.start()
         }
     }
 
-    private fun renderData(weather: Weather) {
+    private fun renderData(weather: WeatherDTO) {
         with(binding) {
             loadingLayout.visibility = View.GONE
             with(weather) {
-                cityName.text = city.name
-                temperatureValue.text = temperature.toString()
-                feelsLikeValue.text = feelsLike.toString()
-                cityCoordinates.text = "${city.lat} ${city.lon}"
+                cityName.text = currentCityName
+                temperatureValue.text = weather.factDTO.temperature.toString()
+                feelsLikeValue.text = weather.factDTO.feelsLike.toString()
+                cityCoordinates.text = "${weather.infoDTO.lat} ${weather.infoDTO.lon}"
             }
         }
         mainView.showSnackBar("Все работает!")
@@ -67,5 +73,8 @@ class DetailsFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
+    override fun onResponse(weatherDTO: WeatherDTO) {
+        renderData(weatherDTO)
     }
 }

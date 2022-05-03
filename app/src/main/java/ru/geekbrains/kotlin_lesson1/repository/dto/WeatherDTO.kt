@@ -1,7 +1,10 @@
-package ru.geekbrains.kotlin_lesson1.repository
+package ru.geekbrains.kotlin_lesson1.repository.dto
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class WeatherDTO(
     @SerializedName("fact")
     val factDTO: FactDTO,
@@ -13,4 +16,4 @@ data class WeatherDTO(
     val now: Int,
     @SerializedName("now_dt")
     val nowDt: String
-)
+): Parcelable

@@ -1,12 +1,10 @@
 package ru.geekbrains.kotlin_lesson1.repository
 
-class RepositoryImpl : Repository {
-    override fun getWeatherFromServer(): Weather {
-        Thread.sleep(2000L) // эмуляция сетевого запроса
-        return Weather()// эмуляция ответа
+class RepositoryImpl: Repository {
+    override fun getWorldWeatherFromLocalStorage():List<Weather> {
+        return getWorldCities()
     }
-
-    override fun getWorldWeatherFromLocalStorage() = getWorldCities() // эмуляция ответа
-
-    override fun getRussianWeatherFromLocalStorage() = getRussianCities() // эмуляция ответа
+    override fun getRussianWeatherFromLocalStorage():List<Weather> {
+        return getRussianCities()
+    }
 }

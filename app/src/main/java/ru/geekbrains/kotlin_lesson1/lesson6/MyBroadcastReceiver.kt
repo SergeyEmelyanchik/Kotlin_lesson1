@@ -4,13 +4,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import ru.geekbrains.kotlin_lesson1.utlis.KEY_BUNDLE_SERVICE_MESSAGE
+import ru.geekbrains.kotlin_lesson1.utlis.LOG_KEY
+import ru.geekbrains.kotlin_lesson1.utlis.LOG_KEY_SECOND
+import ru.geekbrains.kotlin_lesson1.utlis.MAIN_SERVICE_KEY
 
-class MyBroadcastReceiver: BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        intent?.let {
-            val extra = it.getStringExtra(KEY_BUNDLE_SERVICE_MESSAGE) // TODO HW проблема с key2
-            Log.d("@@@","MyBroadcastReceiver onReceive $extra")
+class MyBroadcastReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        Log.d(LOG_KEY_SECOND,"MyBroadcastReceiver onReceive ${intent.action}")
+        intent.let {
+            val stringExtra = it.getStringExtra(MAIN_SERVICE_KEY)
+            Log.d(LOG_KEY,"MainService говорит через MyBroadcastReceiver: $stringExtra")
         }
     }
 }

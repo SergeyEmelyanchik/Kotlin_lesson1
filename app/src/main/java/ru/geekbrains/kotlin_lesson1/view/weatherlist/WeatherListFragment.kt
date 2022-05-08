@@ -8,32 +8,26 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentWeatherListBinding
 import ru.geekbrains.kotlin_lesson1.repository.Weather
-import ru.geekbrains.kotlin_lesson1.utlis.KEY_BUNDLE_WEATHER
+import ru.geekbrains.kotlin_lesson1.utlis.BUNDLE_WEATHER_KEY
 import ru.geekbrains.kotlin_lesson1.view.details.DetailsFragment
 import ru.geekbrains.kotlin_lesson1.viewmodel.AppState
 import ru.geekbrains.kotlin_lesson1.viewmodel.MainViewModel
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
-
-
+    private val adapter = WeatherListAdapter(this)
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
         get() {
             return _binding!!
         }
-
-    private val adapter = WeatherListAdapter(this)
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,82 +35,77 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-    var isBelarus = true
-
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
-
-
+    private var fromHere = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.also {
-            it.adapter = adapter
-            it.layoutManager = LinearLayoutManager(requireContext())
-        }
-
-        val observer = { data: AppState -> renderData(data) }
+        initRecycler()
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
-        setupFab()
-        viewModel.getWeatherRussia()
-    }
-
-    private fun setupFab() {
-
         binding.floatingActionButton.setOnClickListener {
-            isBelarus = !isBelarus
-            if (isBelarus) {
-                viewModel.getWeatherRussia()
-                binding.floatingActionButton.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_belarus
-                    )
+            redraw(viewModel,true)
+        }
+        viewModel.getWeatherFromHere()
+    }
+    private fun initRecycler() {
+        binding.listRecyclerView.also { it.adapter = adapter }
+    }
+    private fun redraw(viewModel: MainViewModel, redraw:Boolean) {
+        if (redraw) {
+            fromHere = !fromHere
+        }
+        if (fromHere) {
+            viewModel.getWeatherFromHere()
+            binding.floatingActionButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_belarus
                 )
-            } else {
-                binding.floatingActionButton.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_earth
-                    )
+            )
+        } else {
+            viewModel.getWeatherNotFromHere()
+            binding.floatingActionButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_earth
                 )
-                viewModel.getWeatherWorld()
-            }
+            )
         }
     }
-
-    private fun renderData(data: AppState) {
-        when (data) {
-            is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.root, "Не получилось ${data.error}", Snackbar.LENGTH_LONG)
-                    .show()
-            }
-            is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
-            }
-            is AppState.Success -> {
-                binding.loadingLayout.visibility = View.GONE
-                adapter.setData(data.weatherList)
-
-
-            }
+    private fun renderData(data: AppState, viewModel: MainViewModel) = when (data) {//
+        is AppState.Error -> {
+            binding.loadingLayout.apply{ visibility = View.GONE }
+            showMessage(data,viewModel)
+        }
+        is AppState.Loading -> {
+            binding.loadingLayout.apply{visibility = View.VISIBLE}
+        }
+        is AppState.Success -> {
+            binding.loadingLayout.apply{ visibility = View.GONE }
+            adapter.setData(data.getWeatherListData())//weatherListData
         }
     }
-
+    private fun showMessage(msg: AppState, viewModel: MainViewModel){
+        val mySnack: Snackbar = Snackbar.make(
+            binding.root,
+            "Что-то не загрузилось \n${msg.toString()}",
+            Snackbar.LENGTH_LONG
+        )
+        mySnack.setAction("Попробовать еще?", View.OnClickListener {
+            redraw(viewModel,false)
+        })
+            .show()
+    }
     companion object {
         @JvmStatic
         fun newInstance() = WeatherListFragment()
     }
-
     override fun onItemClick(weather: Weather) {
-
+        val bundle = Bundle()
         requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.container,
-            DetailsFragment.newInstance(Bundle().apply {
-                putParcelable(KEY_BUNDLE_WEATHER, weather)
-            })
+            R.id.mainContainer,
+            DetailsFragment.newInstance(bundle.apply { putParcelable(BUNDLE_WEATHER_KEY, weather) })
         ).addToBackStack("").commit()
     }
 }
+

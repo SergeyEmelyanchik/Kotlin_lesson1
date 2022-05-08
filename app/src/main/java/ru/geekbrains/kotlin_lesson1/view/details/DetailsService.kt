@@ -3,7 +3,6 @@ package ru.geekbrains.kotlin_lesson1.view.details
 import android.app.IntentService
 import android.content.Intent
 import android.util.Log
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import ru.geekbrains.kotlin_lesson1.BuildConfig
@@ -14,65 +13,80 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class DetailsService(val name: String = "") : IntentService(name) {
+class DetailsService(
+    serviceName: String = "Service"
+) : IntentService(serviceName) {
+
+    //private val onErrorListener = OnServerResponseListener()
+
     override fun onHandleIntent(intent: Intent?) {
-        Log.d("@@@", "work DetailsService")
+        Log.d(LOG_KEY, "Сервис DetailsService заработал")
+        //TODO вызвать Snackbar
+
         intent?.let {
-            val lon = it.getDoubleExtra(KEY_BUNDLE_LON, 0.0)
-            val lat = it.getDoubleExtra(KEY_BUNDLE_LAT, 0.0)
-            Log.d("@@@", "work DetailsService $lat $lon")
+            val lat = it.getDoubleExtra(LAT_KEY,0.0)
+            val lon = it.getDoubleExtra(LON_KEY,0.0)
+            Log.d(LOG_KEY, "Получили широту и долготу: $lat $lon")
 
-
-            val urlText =
-                "$YANDEX_DOMAIN${YANDEX_PATH}lat=$lat&lon=$lon"
-            //val urlText = "$YANDEX_DOMAIN_HARD_MODE${YANDEX_PATH}lat=$lat&lon=$lon"
+            //val urlText = $YANDEX_DOMAIN_PART$YANDEX_ENDPOINT$LAT_KEY$=lat$LON_KEY=$lon
+            val urlText = "$YANDEX_DOMAIN_HARD_MODE_PART$YANDEX_ENDPOINT$LAT_KEY=$lat&$LON_KEY=$lon"
             val uri = URL(urlText)
-
-            //val urlConnection: HttpsURLConnection = (uri.openConnection() as HttpsURLConnection).apply { для ленивых
+            //val urlConnection: HttpsURLConnection = (uri.openConnection() as HttpsURLConnection).apply {
             val urlConnection: HttpURLConnection =
                 (uri.openConnection() as HttpURLConnection).apply {
-                    connectTimeout = 1000 // set под капотом
-                    //val r= readTimeout // get под капотом
-                    readTimeout = 1000 // set под капотом
+                    connectTimeout = CONNECT_TIMEOUT
+                    readTimeout = READ_TIMEOUT
                     addRequestProperty(
-                        "X-Yandex-API-Key",
+                        YANDEX_API_KEY,
                         BuildConfig.WEATHER_API_KEY
                     )
                 }
 
-            val responseCode = urlConnection.responseCode
-            val responseMessage = urlConnection.responseMessage
-            val serverSide = 500..599
-            val clientSide = 400..499
-            val responseOk = 200..299
-            when (responseCode) {
-                in serverSide -> {
-                    Log.e("@@@", "$responseCode + $responseMessage")
-                }
-                in clientSide -> {
-                    Log.e("@@@", "$responseCode + $responseMessage")
-                }
-                in responseOk -> {
-                    Log.e("@@@", "$responseCode + $responseMessage")
-                }
-            }
-
-            val buffer = BufferedReader(InputStreamReader(urlConnection.inputStream))
             try {
-                val weatherDTO: WeatherDTO = Gson().fromJson(buffer, WeatherDTO::class.java)
+                val headers = urlConnection.headerFields
+                val responseCode = urlConnection.responseCode
+                val responseMessage = urlConnection.responseMessage
 
-                val message = Intent(KEY_WAVE_SERVICE_BROADCAST)
-                message.putExtra(
-                    KEY_BUNDLE_SERVICE_BROADCAST_WEATHER, weatherDTO
-                )
-                //sendBroadcast(message)
-                LocalBroadcastManager.getInstance(this).sendBroadcast(message)
+                Log.d(LOG_KEY, "DetailsService responseCode: $responseCode   responseMessage: $responseMessage")
+
+                if (responseCode in SERVER_SIDE) {
+
+                    //onErrorListener.onError(ResponseState.ErrorOnServerSide("responseCode: $responseCode   responseMessage: $responseMessage"))
+
+                } else if (responseCode in CLIENT_SIDE) {
+
+                    //onErrorListener.onError(ResponseState.ErrorOnClientSide("responseCode: $responseCode   responseMessage: $responseMessage"))
+
+                } else if (responseCode in RESPONSEOK) {
+                    val buffer = BufferedReader(InputStreamReader(urlConnection.inputStream))
+                    val weatherDTO: WeatherDTO = Gson().fromJson(
+                        buffer,
+                        WeatherDTO::class.java
+                    )
+
+                    val message = Intent(BROADCAST_RECEIVER_CHANNEL_WEATHER_KEY)
+                    message.putExtra(SERVICE_BROADCAST_WEATHER_KEY, weatherDTO)
+                    sendBroadcast(message)
+                    //LocalBroadcastManager.getInstance(this).sendBroadcast(message)
+
+                    /*Handler(Looper.getMainLooper()).post {
+                        onServerResponseListener.onResponse(weatherDTO)
+                    }*/
+                }
             } catch (e: JsonSyntaxException) {
+                //onErrorListener.onError(ResponseState.ErrorInJSONConversion(e.toString()))
+            } catch (e: RuntimeException){
 
-            } finally {
+            }
+            finally {
                 urlConnection.disconnect()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(LOG_KEY, "Сервис DetailsService завершил работу")
     }
 }
 

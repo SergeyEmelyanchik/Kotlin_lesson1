@@ -24,6 +24,8 @@ class DetailsRepositoryOkHttpImpl:DetailsRepository {
                 val weather = convertDtoToModel(weatherDTO)
                 weather.city = city
                 callback.onResponse(weather)
+            } else {
+                callback.onFailure("ВНИМАНИЕ ОШИБОЧНЫЙ РЕЗУЛЬТАТ ${response.body().toString()}")
             }
         }.start()
     }

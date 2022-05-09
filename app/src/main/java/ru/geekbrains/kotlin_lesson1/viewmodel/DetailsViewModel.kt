@@ -15,11 +15,15 @@ class DetailsViewModel(
             override fun onResponse(weather: Weather) {
                 liveData.postValue(DetailsState.Success(weather))
             }
+            override fun onFailure(errorMessage: String) {
+                liveData.postValue(DetailsState.Error(Throwable(errorMessage)))
+            }
 
         })
     }
 
     interface Callback{
         fun onResponse(weather: Weather)
+        fun onFailure(errorMessage: String)
     }
 }

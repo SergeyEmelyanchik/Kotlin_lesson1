@@ -12,7 +12,7 @@ data class Weather(
 fun getDefaultCity() = City("Москва", 55.75, 37.61)
 @Parcelize
 data class City(
-    val cityName: String,
+    var cityName: String,
     val lat: Double,
     val lon: Double) : Parcelable
 fun getWorldCities(): List<Weather> = listOf(

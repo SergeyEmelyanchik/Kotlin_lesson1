@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import ru.geekbrains.kotlin_lesson1.MyApp
 import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.lesson6.MainService
 import ru.geekbrains.kotlin_lesson1.lesson6.MyBroadcastReceiver
@@ -28,13 +29,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         startService(Intent(this, MainService::class.java).apply {
-            putExtra(MAIN_ACTIVITY_KEY, "Hail to the Service")
+            putExtra(MAIN_ACTIVITY_KEY, "Привет сервис")
         })
 
         val receiver = MyBroadcastReceiver()
         registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_KEY))
 /*        LocalBroadcastManager.getInstance(this)
             .registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_KEY))*/
+        Thread{ MyApp.getHistoryDAO().getAll()}.start()
 
     }
 

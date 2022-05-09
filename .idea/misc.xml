@@ -9,10 +9,11 @@
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/activity_main_vebview.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/activity_main_webview.xml" value="0.22083333333333333" />
-        <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/fragment_details.xml" value="0.22083333333333333" />
+        <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/fragment_details.xml" value="0.1" />
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/fragment_main.xml" value="0.225" />
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/fragment_threads.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/fragment_weather_list.xml" value="0.22083333333333333" />
+        <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/layout/fragment_weather_list_recycler_item.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/emely/Kotlin_lesson1/app/src/main/res/menu/menu.xml" value="0.22083333333333333" />
       </map>
     </option>

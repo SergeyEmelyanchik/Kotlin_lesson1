@@ -20,7 +20,7 @@ class DetailsService(
     //private val onErrorListener = OnServerResponseListener()
 
     override fun onHandleIntent(intent: Intent?) {
-        Log.d(LOG_KEY, "Сервис DetailsService заработал")
+        Log.d(LOG_KEY, "Сервис DetailsService начал работу")
         //TODO вызвать Snackbar
 
         intent?.let {

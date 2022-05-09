@@ -2,14 +2,11 @@ package ru.geekbrains.kotlin_lesson1.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.geekbrains.kotlin_lesson1.repository.City
-import ru.geekbrains.kotlin_lesson1.repository.DetailsRepository
-import ru.geekbrains.kotlin_lesson1.repository.DetailsRepositoryOkHttpImpl
-import ru.geekbrains.kotlin_lesson1.repository.Weather
+import ru.geekbrains.kotlin_lesson1.repository.*
 
 class DetailsViewModel(
     private val liveData: MutableLiveData<DetailsState> = MutableLiveData(),
-    private val repository: DetailsRepository = DetailsRepositoryOkHttpImpl(),
+    private val repository: DetailsRepository = DetailsRepositoryRetrofit2Impl(),
 ) : ViewModel() {
 
     fun getLiveData() = liveData

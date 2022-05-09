@@ -67,13 +67,9 @@ class DetailsFragment : Fragment(){
                     feelsLikeValue.text = weather.feelsLike.toString()
                     cityCoordinates.text = "lat: ${weather.city.lat} lon: ${weather.city.lon}"
                 }
-                mainView.showSnackBar("Ура! Загрузилось!", "", {}, Snackbar.LENGTH_LONG)
+                mainView.showSnackBar("Работает!", "", {}, Snackbar.LENGTH_LONG)
             }
         }
-    }
-
-    private fun showMessage(msg: String) {
-        Snackbar.make(binding.mainView, msg, Snackbar.LENGTH_LONG).show()
     }
     companion object {
         @JvmStatic

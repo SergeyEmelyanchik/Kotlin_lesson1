@@ -11,6 +11,8 @@ const val BROADCAST_RECEIVER_CHANNEL_WEATHER_KEY = "Service broadcast weather ch
 const val SERVICE_BROADCAST_WEATHER_KEY = "weather service broadcast"
 const val LAT_KEY = "lat"
 const val LON_KEY = "lon"
+const val KEY_SP_FILE_NAME_1 = "fileName1"
+const val KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN = "is_belsrus"
 //endregion
 
 //region Yandex domain

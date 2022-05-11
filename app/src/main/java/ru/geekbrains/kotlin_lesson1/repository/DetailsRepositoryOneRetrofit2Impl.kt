@@ -11,7 +11,7 @@ import ru.geekbrains.kotlin_lesson1.utlis.YANDEX_DOMAIN_HARD_MODE_PART
 import ru.geekbrains.kotlin_lesson1.utlis.convertDtoToModel
 import ru.geekbrains.kotlin_lesson1.viewmodel.DetailsViewModel
 
-class DetailsRepositoryRetrofit2Impl: DetailsRepository {
+class DetailsRepositoryOneRetrofit2Impl: DetailsRepositoryOne {
     override fun getWeatherDetails(city: City, callbackMy: DetailsViewModel.Callback) {
         val weatherAPI = Retrofit.Builder().apply {
             baseUrl(YANDEX_DOMAIN_HARD_MODE_PART)

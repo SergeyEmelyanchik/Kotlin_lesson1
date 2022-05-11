@@ -7,6 +7,7 @@
     <dimen name="calculate_text_size">20sp</dimen>
     <dimen name="citi_marginTop">20dp</dimen>
     <dimen name="header_city_icon_glide">100dp</dimen>
+    <dimen name="padding_start">20dp</dimen>
 
 
 </resources>

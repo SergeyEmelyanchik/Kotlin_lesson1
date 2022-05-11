@@ -16,6 +16,7 @@ import ru.geekbrains.kotlin_lesson1.utlis.BROADCAST_RECEIVER_CHANNEL_KEY
 import ru.geekbrains.kotlin_lesson1.utlis.KEY_SP_FILE_NAME_1
 import ru.geekbrains.kotlin_lesson1.utlis.KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN
 import ru.geekbrains.kotlin_lesson1.utlis.MAIN_ACTIVITY_KEY
+import ru.geekbrains.kotlin_lesson1.view.historylist.HistoryWeatherListFragment
 import ru.geekbrains.kotlin_lesson1.view.weatherlist.WeatherListFragment
 import kotlin.system.exitProcess
 
@@ -36,19 +37,19 @@ class MainActivity : AppCompatActivity() {
         })
         val sp = getSharedPreferences(KEY_SP_FILE_NAME_1, Context.MODE_PRIVATE)
 
-        val editor =  sp.edit()
-        editor.putBoolean(KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN,true)
+        val editor = sp.edit()
+        editor.putBoolean(KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN, true)
         editor.apply()
 
 
         val defaultValueIsRussian = true
-        sp.getBoolean(KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN,defaultValueIsRussian)
+        sp.getBoolean(KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN, defaultValueIsRussian)
 
         val receiver = MyBroadcastReceiver()
         registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_KEY))
 /*        LocalBroadcastManager.getInstance(this)
             .registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_KEY))*/
-        Thread{ MyApp.getHistoryDAO().getAll()}.start()
+        Thread { MyApp.getHistoryDAO().getAll() }.start()
 
     }
 
@@ -56,8 +57,16 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            (R.id.actionHistory) -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.mainContainer, HistoryWeatherListFragment.newInstance())
+                    .addToBackStack("")
+                    .commit()
+            }
             (R.id.actionThreads) -> {
                 supportFragmentManager
                     .beginTransaction()

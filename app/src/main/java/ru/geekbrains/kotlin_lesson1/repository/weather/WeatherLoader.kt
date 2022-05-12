@@ -27,7 +27,7 @@ class WeatherLoader(
         val uri = URL(urlText)
         //val urlConnection: HttpsURLConnection = (uri.openConnection() as HttpsURLConnection).apply {
         val urlConnection: HttpURLConnection = (uri.openConnection() as HttpURLConnection).apply {
-           connectTimeout = CONNECT_TIMEOUT
+            connectTimeout = CONNECT_TIMEOUT
             readTimeout = READ_TIMEOUT
             addRequestProperty(
                 YANDEX_API_KEY,

@@ -24,12 +24,18 @@ fun convertDtoToModel(weatherDTO: WeatherDTO): Weather {
 }
 
 fun convertWeatherToEntity(weather: Weather): HistoryEntity {
-    return HistoryEntity(0,weather.city.cityName,weather.temperature,weather.feelsLike,weather.icon)
+    return HistoryEntity(
+        0,
+        weather.city.cityName,
+        weather.temperature,
+        weather.feelsLike,
+        weather.icon
+    )
 }
 
-fun convertHistoryEntityToWeather(entityList: List<HistoryEntity>):List<Weather>{
+fun convertHistoryEntityToWeather(entityList: List<HistoryEntity>): List<Weather> {
     return entityList.map {
-        Weather(City(it.city,0.0,0.0),it.temperature,it.feelsLike,it.icon)
+        Weather(City(it.city, 0.0, 0.0), it.temperature, it.feelsLike, it.icon)
     }
 }
 

@@ -11,10 +11,10 @@ import ru.geekbrains.kotlin_lesson1.utlis.MAIN_SERVICE_KEY
 class MyBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d(LOG_KEY_SECOND,"MyBroadcastReceiver onReceive ${intent.action}")
+        Log.d(LOG_KEY_SECOND, "MyBroadcastReceiver onReceive ${intent.action}")
         intent.let {
             val stringExtra = it.getStringExtra(MAIN_SERVICE_KEY)
-            Log.d(LOG_KEY,"MainService говорит через MyBroadcastReceiver: $stringExtra")
+            Log.d(LOG_KEY, "MainService говорит через MyBroadcastReceiver: $stringExtra")
         }
     }
 }

@@ -18,11 +18,10 @@ interface HistoryDAO {
     fun update(entity: HistoryEntity)
 
     @Query("SELECT * FROM history_table")
-    fun getAll():List<HistoryEntity>
+    fun getAll(): List<HistoryEntity>
 
     @Query("SELECT * FROM history_table WHERE city = :city")
     fun getHistoryForCity(city: String): List<HistoryEntity>
-
 
 
 }

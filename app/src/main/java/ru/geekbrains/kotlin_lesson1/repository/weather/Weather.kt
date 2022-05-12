@@ -10,12 +10,16 @@ data class Weather(
     val feelsLike: Int = 0,
     val icon: String = "bkn_n"
 ) : Parcelable
+
 fun getDefaultCity() = City("Москва", 55.75, 37.61)
+
 @Parcelize
 data class City(
     var cityName: String,
     val lat: Double,
-    val lon: Double) : Parcelable
+    val lon: Double
+) : Parcelable
+
 fun getWorldCities(): List<Weather> = listOf(
     Weather(City("Лондон", 51.5085300, -0.1257400), 1, 2),
     Weather(City("Токио", 35.6895000, 139.6917100), 3, 4),
@@ -28,6 +32,7 @@ fun getWorldCities(): List<Weather> = listOf(
     Weather(City("Киев", 50.4501, 30.523400000000038), 17, 18),
     Weather(City("Пекин", 39.90419989999999, 116.40739630000007), 19, 20)
 )
+
 fun getRussianCities(): List<Weather> = listOf(
     Weather(City("Минск", 53.90453979999999, 27.561524400000053), 11, 12),
     Weather(City("Брест", 59.9342802, 30.335098600000038), 3, 3),

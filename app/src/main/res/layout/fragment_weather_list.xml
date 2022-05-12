@@ -17,10 +17,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/indent"
         android:src="@drawable/ic_belarus"
-        app:tint="@null"
-        app:maxImageSize="56dp" />
+        app:maxImageSize="@dimen/size_icon"
+        app:tint="@null" />
 
     <FrameLayout
         android:id="@+id/loadingLayout"

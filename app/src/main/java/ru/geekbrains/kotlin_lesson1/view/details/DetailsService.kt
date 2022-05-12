@@ -24,8 +24,8 @@ class DetailsService(
         //TODO вызвать Snackbar
 
         intent?.let {
-            val lat = it.getDoubleExtra(LAT_KEY,0.0)
-            val lon = it.getDoubleExtra(LON_KEY,0.0)
+            val lat = it.getDoubleExtra(LAT_KEY, 0.0)
+            val lon = it.getDoubleExtra(LON_KEY, 0.0)
             Log.d(LOG_KEY, "Получили широту и долготу: $lat $lon")
 
             //val urlText = $YANDEX_DOMAIN_PART$YANDEX_ENDPOINT$LAT_KEY$=lat$LON_KEY=$lon
@@ -47,7 +47,10 @@ class DetailsService(
                 val responseCode = urlConnection.responseCode
                 val responseMessage = urlConnection.responseMessage
 
-                Log.d(LOG_KEY, "DetailsService responseCode: $responseCode   responseMessage: $responseMessage")
+                Log.d(
+                    LOG_KEY,
+                    "DetailsService responseCode: $responseCode   responseMessage: $responseMessage"
+                )
 
                 if (responseCode in SERVER_SIDE) {
 
@@ -75,10 +78,9 @@ class DetailsService(
                 }
             } catch (e: JsonSyntaxException) {
                 //onErrorListener.onError(ResponseState.ErrorInJSONConversion(e.toString()))
-            } catch (e: RuntimeException){
+            } catch (e: RuntimeException) {
 
-            }
-            finally {
+            } finally {
                 urlConnection.disconnect()
             }
         }

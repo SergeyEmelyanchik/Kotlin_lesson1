@@ -25,7 +25,7 @@ import ru.geekbrains.kotlin_lesson1.viewmodel.DetailsState
 import ru.geekbrains.kotlin_lesson1.viewmodel.DetailsViewModel
 
 
-class DetailsFragment : Fragment(){
+class DetailsFragment : Fragment() {
     private var _binding: FragmentDetailsBinding? = null
     private val binding: FragmentDetailsBinding
         get() {
@@ -46,12 +46,14 @@ class DetailsFragment : Fragment(){
 
         return binding.root
     }
+
     private val viewModel: DetailsViewModel by lazy {
         ViewModelProvider(this).get(DetailsViewModel::class.java)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getLiveData().observe(viewLifecycleOwner,object :Observer<DetailsState>{
+        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<DetailsState> {
             override fun onChanged(t: DetailsState) {
                 renderData(t)
             }
@@ -61,9 +63,10 @@ class DetailsFragment : Fragment(){
             viewModel.getWeather(it.city)
         }
     }
+
     private fun renderData(detailsState: DetailsState) {
 
-        when(detailsState){
+        when (detailsState) {
             is DetailsState.Error -> {
                 loadingLayout.visibility = View.GONE
                 mainView.showSnackBar(detailsState.error.toString(), "", {}, Snackbar.LENGTH_LONG)
@@ -87,11 +90,12 @@ class DetailsFragment : Fragment(){
                         ?.load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
                     icon.loadSvg("https://yastatic.net/weather/i/icons/blueye/color/svg/${weather.icon}.svg")
 
-                    }
+                }
                 mainView.showSnackBar("Работает!", "", {}, Snackbar.LENGTH_LONG)
             }
         }
     }
+
     private fun ImageView.loadSvg(url: String) {
         val imageLoader = ImageLoader.Builder(this.context)
             .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
@@ -104,6 +108,7 @@ class DetailsFragment : Fragment(){
             .build()
         imageLoader.enqueue(request)
     }
+
     companion object {
         @JvmStatic
         fun newInstance(bundle: Bundle): DetailsFragment {

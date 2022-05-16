@@ -13,7 +13,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/content_provider"
-        android:title="title_history"
+        android:title="@string/contact"
         android:icon="@drawable/lc_contact"
         app:showAsAction="always"/>
     <item

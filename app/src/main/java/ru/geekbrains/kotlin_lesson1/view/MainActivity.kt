@@ -75,13 +75,10 @@ class MainActivity : AppCompatActivity() {
                     .addToBackStack("")
                     .commit()
             }
-            /*R.id.action_work_with_content_provider->{
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.container, ContentProviderFragment.newInstance()).addToBackStack("").commit()
-            }*/
             R.id.content_provider ->
                 supportFragmentManager.beginTransaction()
-                    .add(R.id.container, ContentProviderFragment.newInstance()).addToBackStack("").commit()
+                    .add(R.id.container, ContentProviderFragment.newInstance()).addToBackStack("")
+                    .commit()
 
 
             (R.id.actionExit) -> {

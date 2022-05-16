@@ -11,6 +11,7 @@
     <dimen name="size_icon">56dp</dimen>
     <dimen name="indent">20dp</dimen>
     <dimen name="text_contact">14sp</dimen>
+    <dimen name="text_contact_number">10sp</dimen>
 
 
 </resources>

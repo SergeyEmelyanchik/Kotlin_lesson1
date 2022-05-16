@@ -17,4 +17,5 @@
     <string name="two">2</string>
     <string name="calc">calculate</string>
     <string name="work_with_content_provider">WWCP</string>
+    <string name="contact">Contact</string>
 </resources>

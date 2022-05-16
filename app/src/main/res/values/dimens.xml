@@ -10,6 +10,7 @@
     <dimen name="padding_start">20dp</dimen>
     <dimen name="size_icon">56dp</dimen>
     <dimen name="indent">20dp</dimen>
+    <dimen name="text_contact">14sp</dimen>
 
 
 </resources>

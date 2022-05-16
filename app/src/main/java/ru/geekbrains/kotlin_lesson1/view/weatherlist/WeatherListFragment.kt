@@ -1,5 +1,6 @@
 package ru.geekbrains.kotlin_lesson1.view.weatherlist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,15 @@ import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentWeatherListBinding
 import ru.geekbrains.kotlin_lesson1.repository.Weather
 import ru.geekbrains.kotlin_lesson1.utlis.BUNDLE_WEATHER_KEY
+import ru.geekbrains.kotlin_lesson1.utlis.DEFAULT_VALUE_BOOLEAN_FALSE
+import ru.geekbrains.kotlin_lesson1.utlis.PREFERENCE_KEY_FILE_NAME_SETTINGS
+import ru.geekbrains.kotlin_lesson1.utlis.PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN
 import ru.geekbrains.kotlin_lesson1.view.details.DetailsFragment
 import ru.geekbrains.kotlin_lesson1.viewmodel.AppState
 import ru.geekbrains.kotlin_lesson1.viewmodel.MainViewModel
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
+    private var fromHere = DEFAULT_VALUE_BOOLEAN_FALSE
     private val adapter = WeatherListAdapter(this)
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
@@ -34,17 +39,23 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        fromHere = requireActivity().getSharedPreferences(
+            PREFERENCE_KEY_FILE_NAME_SETTINGS,
+            Context.MODE_PRIVATE
+        )
+            .getBoolean(PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN, DEFAULT_VALUE_BOOLEAN_FALSE)
         _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    private var fromHere = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
+
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
+        redraw(viewModel, false)
         binding.floatingActionButton.setOnClickListener {
             redraw(viewModel, true)
         }
@@ -112,7 +123,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     override fun onItemClick(weather: Weather) {
         val bundle = Bundle()
         requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.mainContainer,
+            R.id.container,
             DetailsFragment.newInstance(bundle.apply { putParcelable(BUNDLE_WEATHER_KEY, weather) })
         ).addToBackStack("").commit()
     }

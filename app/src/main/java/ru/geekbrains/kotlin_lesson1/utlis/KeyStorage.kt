@@ -43,5 +43,8 @@ const val PREFERENCE_KEY_FILE_NAME_SETTINGS = "application settings file name"
 const val PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN = "application settings is russian"
 //endregion
 
+
+const val REQUEST_CODE = 999
+
 class KeyStorage {
 }

@@ -16,4 +16,5 @@
     <string name="zero">0</string>
     <string name="two">2</string>
     <string name="calc">calculate</string>
+    <string name="work_with_content_provider">WWCP</string>
 </resources>

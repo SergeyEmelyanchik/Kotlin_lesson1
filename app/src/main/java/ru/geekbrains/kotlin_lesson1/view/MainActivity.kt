@@ -16,6 +16,7 @@ import ru.geekbrains.kotlin_lesson1.utlis.BROADCAST_RECEIVER_CHANNEL_KEY
 import ru.geekbrains.kotlin_lesson1.utlis.KEY_SP_FILE_NAME_1
 import ru.geekbrains.kotlin_lesson1.utlis.KEY_SP_FILE_NAME_1_KEY_IS_RUSSIAN
 import ru.geekbrains.kotlin_lesson1.utlis.MAIN_ACTIVITY_KEY
+import ru.geekbrains.kotlin_lesson1.view.contentProvider.ContentProviderFragment
 import ru.geekbrains.kotlin_lesson1.view.historylist.HistoryWeatherListFragment
 import ru.geekbrains.kotlin_lesson1.view.weatherlist.WeatherListFragment
 import kotlin.system.exitProcess
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().replace(
-                R.id.mainContainer,
+                R.id.container,
                 WeatherListFragment.newInstance()
             ).commit()
         }
@@ -63,17 +64,26 @@ class MainActivity : AppCompatActivity() {
             (R.id.actionHistory) -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainContainer, HistoryWeatherListFragment.newInstance())
+                    .replace(R.id.container, HistoryWeatherListFragment.newInstance())
                     .addToBackStack("")
                     .commit()
             }
             (R.id.actionThreads) -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainContainer, ThreadsFragment.newInstance())
+                    .replace(R.id.container, ThreadsFragment.newInstance())
                     .addToBackStack("")
                     .commit()
             }
+            /*R.id.action_work_with_content_provider->{
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.container, ContentProviderFragment.newInstance()).addToBackStack("").commit()
+            }*/
+            R.id.content_provider ->
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.container, ContentProviderFragment.newInstance()).addToBackStack("").commit()
+
+
             (R.id.actionExit) -> {
                 exitProcess(0)
             }

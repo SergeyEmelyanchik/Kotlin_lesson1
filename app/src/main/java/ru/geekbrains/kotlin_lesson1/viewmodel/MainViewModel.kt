@@ -16,8 +16,8 @@ class MainViewModel(
         return liveData
     }
 
-    fun getWeatherNotFromHere() = getWeather(true)
-    fun getWeatherFromHere() = getWeather(false)
+    fun getWeatherWorld() = getWeather(true)
+    fun getWeatherRussia() = getWeather(false)
 
     private fun getWeather(notFromHere: Boolean) {
         Thread {

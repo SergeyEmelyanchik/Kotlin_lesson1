@@ -62,12 +62,13 @@ class ContentProviderFragment : Fragment() {
 
     private fun explain() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Доступ к контактам")
-            .setMessage("Объяснение")
-            .setPositiveButton("Предоставить доступ") { _, _ ->
+            .setTitle(resources.getString(R.string.access_to_contacts))
+            .setMessage(resources.getString(R.string.explanation_text))
+            .setPositiveButton(resources.getString(R.string.grant_access)) { _, _ ->
                 mRequestPermission()
+
             }
-            .setNegativeButton("Не надо") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(resources.getString(R.string.no_need)) { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }
@@ -134,7 +135,7 @@ class ContentProviderFragment : Fragment() {
                                             "Осуществить вызов по мобильной сети?",
                                             LENGTH_INDEFINITE
                                         )
-                                            .setAction("Да") { call(number) }.show()
+                                            .setAction(resources.getString(R.string.yes)){ call(number) }.show()
                                     }
                                 })
                             }

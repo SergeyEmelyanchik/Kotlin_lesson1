@@ -1,7 +1,16 @@
 package ru.geekbrains.kotlin_lesson1.view.weatherlist
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentWeatherListBinding
+import ru.geekbrains.kotlin_lesson1.repository.City
 import ru.geekbrains.kotlin_lesson1.repository.Weather
 import ru.geekbrains.kotlin_lesson1.utlis.BUNDLE_WEATHER_KEY
 import ru.geekbrains.kotlin_lesson1.utlis.DEFAULT_VALUE_BOOLEAN_FALSE
@@ -22,7 +32,7 @@ import ru.geekbrains.kotlin_lesson1.viewmodel.AppState
 import ru.geekbrains.kotlin_lesson1.viewmodel.MainViewModel
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
-    private var fromHere = DEFAULT_VALUE_BOOLEAN_FALSE
+    private var isRussia = DEFAULT_VALUE_BOOLEAN_FALSE
     private val adapter = WeatherListAdapter(this)
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
@@ -39,7 +49,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fromHere = requireActivity().getSharedPreferences(
+        isRussia = requireActivity().getSharedPreferences(
             PREFERENCE_KEY_FILE_NAME_SETTINGS,
             Context.MODE_PRIVATE
         )
@@ -55,23 +65,129 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
-        redraw(viewModel, false)
+        setupFabCities(viewModel, false)
         binding.floatingActionButton.setOnClickListener {
-            redraw(viewModel, true)
+            setupFabCities(viewModel, true)
         }
-        viewModel.getWeatherFromHere()
+        viewModel.getWeatherRussia()
+        setupFabLocation()
     }
 
     private fun initRecycler() {
         binding.listRecyclerView.also { it.adapter = adapter }
     }
 
-    private fun redraw(viewModel: MainViewModel, redraw: Boolean) {
-        if (redraw) {
-            fromHere = !fromHere
+    private fun setupFabLocation() {
+        binding.mainFragmentFABLocation.setOnClickListener {
+            checkPermission()
         }
-        if (fromHere) {
-            viewModel.getWeatherFromHere()
+    }
+
+    private fun checkPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            getLocation()
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+            explain()
+        } else {
+            mRequestPermission()
+        }
+    }
+
+    private fun explain() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(resources.getString(R.string.dialog_rationale_title))
+            .setMessage(resources.getString(R.string.dialog_rationale_message))
+            .setPositiveButton(resources.getString(R.string.dialog_rationale_give_access)) { _, _ ->
+                mRequestPermission()
+            }
+            .setNegativeButton(resources.getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
+
+    val REQUEST_CODE = 888
+    private fun mRequestPermission() {
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_CODE) {
+            for (i in permissions.indices) {
+                if (permissions[i] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation()
+                } else {
+                    explain()
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    fun getAddressByLocation(location: Location) {
+        val geocoder = Geocoder(requireContext())
+        val timeStump = System.currentTimeMillis()
+        Thread {
+            val addressText =
+                geocoder.getFromLocation(
+                    location.latitude,
+                    location.longitude,
+                    10000
+                )[0].getAddressLine(0)
+            requireActivity().runOnUiThread{
+                showAddressDialog(addressText, location)
+            }
+        }.start()
+        Log.d("@@@", " прошло ${System.currentTimeMillis() + timeStump}")
+    }
+
+    val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            Log.d("@@@", location.toString())
+            getAddressByLocation(location)
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            super.onProviderDisabled(provider)
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            super.onProviderEnabled(provider)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLocation() {
+        context?.let {
+            val locationManager = it.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                val providerGPS = locationManager.getProvider(LocationManager.GPS_PROVIDER)
+                providerGPS?.let {
+                    locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        0,
+                        100f,
+                        locationListener
+                    )
+                }
+
+            }
+        }
+    }
+    private fun setupFabCities(viewModel: MainViewModel, redraw: Boolean) {
+        if (redraw) {
+            isRussia = !isRussia
+        }
+        if (isRussia) {
+            viewModel.getWeatherRussia()
             binding.floatingActionButton.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
@@ -79,7 +195,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
                 )
             )
         } else {
-            viewModel.getWeatherNotFromHere()
+            viewModel.getWeatherWorld()
             binding.floatingActionButton.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
@@ -110,7 +226,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             Snackbar.LENGTH_LONG
         )
         mySnack.setAction("Попробовать еще?", View.OnClickListener {
-            redraw(viewModel, false)
+            setupFabCities(viewModel, false)
         })
             .show()
     }
@@ -127,5 +243,28 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             DetailsFragment.newInstance(bundle.apply { putParcelable(BUNDLE_WEATHER_KEY, weather) })
         ).addToBackStack("").commit()
     }
+    private fun showAddressDialog(address: String, location: Location) {
+        activity?.let {
+            AlertDialog.Builder(it)
+                .setTitle(getString(R.string.dialog_address_title))
+                .setMessage(address)
+                .setPositiveButton(getString(R.string.dialog_address_get_weather)) { _, _ ->
+                    onItemClick(
+                        Weather(
+                            City(
+                                address,
+                                location.latitude,
+                                location.longitude
+                            )
+                        )
+                    )
+                }
+                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
+        }
+    }
+
+
 }
 

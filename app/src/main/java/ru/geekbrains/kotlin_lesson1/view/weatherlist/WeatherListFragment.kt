@@ -30,6 +30,7 @@ import ru.geekbrains.kotlin_lesson1.utlis.PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_R
 import ru.geekbrains.kotlin_lesson1.view.details.DetailsFragment
 import ru.geekbrains.kotlin_lesson1.viewmodel.AppState
 import ru.geekbrains.kotlin_lesson1.viewmodel.MainViewModel
+import java.util.*
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
     private var isRussia = DEFAULT_VALUE_BOOLEAN_FALSE
@@ -133,7 +134,8 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     }
 
     fun getAddressByLocation(location: Location) {
-        val geocoder = Geocoder(requireContext())
+        //val geocoder = Geocoder(requireContext())
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
         val timeStump = System.currentTimeMillis()
         Thread {
             val addressText =

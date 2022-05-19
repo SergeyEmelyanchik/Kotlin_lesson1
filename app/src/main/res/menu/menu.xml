@@ -17,6 +17,11 @@
         android:icon="@drawable/ic_contact"
         app:showAsAction="always"/>
     <item
+        android:id="@+id/action_menu_google_maps"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/google_maps"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/actionExit"
         android:icon="@drawable/ic_exit"
         android:title="@string/exit"

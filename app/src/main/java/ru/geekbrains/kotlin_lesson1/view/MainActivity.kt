@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import ru.geekbrains.kotlin_lesson1.MyApp
 import ru.geekbrains.kotlin_lesson1.R
+import ru.geekbrains.kotlin_lesson1.lesson10.MapsFragment
 import ru.geekbrains.kotlin_lesson1.lesson6.MainService
 import ru.geekbrains.kotlin_lesson1.lesson6.MyBroadcastReceiver
 import ru.geekbrains.kotlin_lesson1.lesson6.ThreadsFragment
@@ -71,19 +72,32 @@ class MainActivity : AppCompatActivity() {
             (R.id.actionThreads) -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, ThreadsFragment.newInstance())
+                    .replace(R.id.container, ThreadsFragment
+                    .newInstance())
+                    .addToBackStack("")
+                    .commit()
+            }
+            (R.id.action_menu_google_maps)->{
+                supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.container, MapsFragment())
                     .addToBackStack("")
                     .commit()
             }
             R.id.content_provider ->
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.container, ContentProviderFragment.newInstance()).addToBackStack("")
+                supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.container, ContentProviderFragment
+                    .newInstance())
+                    .addToBackStack("")
                     .commit()
+
 
 
             (R.id.actionExit) -> {
                 exitProcess(0)
             }
+
         }
         return super.onOptionsItemSelected(item)
     }

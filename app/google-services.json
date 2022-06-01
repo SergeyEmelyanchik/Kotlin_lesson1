@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "514552206787",
+    "project_id": "sergey-15a54",
+    "storage_bucket": "sergey-15a54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514552206787:android:cd593a232b7b86f1da5976",
+        "android_client_info": {
+          "package_name": "ru.geekbrains.kotlin_lesson1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514552206787-eaq4c05h0mfsrh768p3vocajul18o9vf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.geekbrains.kotlin_lesson1",
+            "certificate_hash": "da4a8e9b0c9c393c7987dec62123c8802ece287a"
+          }
+        },
+        {
+          "client_id": "514552206787-muojktj4ulgld436acu83dp4g83kub49.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDphNKVXfS2BN1pH2yBqgz5THgBmV_Ywe4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514552206787-muojktj4ulgld436acu83dp4g83kub49.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

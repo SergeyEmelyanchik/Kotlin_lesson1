@@ -39,6 +39,10 @@
     <string name="enter">введите адрес</string>
     <string name="google_maps">google_maps</string>
     <string name="button_search_map">button_search_map</string>
+    <string name="notification_heading">Здравствуйте!</string>
+    <string name="notification_mesage">Как Ваши дела?</string>
+    <string name="notification_heading_two">Добрый день!</string>
+    <string name="notification_mesage_two">Как Ваше настроение?</string>
 
 
 </resources>

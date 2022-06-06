@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_weather_list.*
+import ru.geekbrains.kotlin_lesson1.BuildConfig
 import ru.geekbrains.kotlin_lesson1.R
 import ru.geekbrains.kotlin_lesson1.databinding.FragmentWeatherListBinding
 import ru.geekbrains.kotlin_lesson1.repository.City
@@ -62,7 +64,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
-
+        version.text = BuildConfig.BUILD_TYPE
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
